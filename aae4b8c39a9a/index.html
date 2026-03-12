@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://salvatoresilver.github.io/ykarion-corp/aae4b8c39a9a/logo.png"/>
+  <link rel="apple-touch-icon" href="https://salvatoresilver.github.io/ykarion-corp/aae4b8c39a9a/logo.png"/>
+  <!-- Open Graph / Link Preview -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Ykarion Corp — Suporte Técnico Avançado"/>
+  <meta property="og:description" content="Formatação, upgrade, Android e Menu Scrcpy. Fortaleza e Região Metropolitana."/>
+  <meta property="og:image" content="https://salvatoresilver.github.io/ykarion-corp/aae4b8c39a9a/og-image.png"/>
+  <meta property="og:url" content="https://ykarion.tiiny.site"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:image" content="https://salvatoresilver.github.io/ykarion-corp/aae4b8c39a9a/og-image.png"/>
+  <!-- Security headers via meta -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff"/>
+  <meta http-equiv="X-Frame-Options" content="DENY"/>
+  <meta http-equiv="Referrer-Policy" content="no-referrer"/>
+  <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://ntfy.sh; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ykarion Corp — Serviços de TI em Fortaleza</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root,[data-theme=dark]{--bg:#0E0E0E;--surface:#161616;--ink:#F0EFEA;--muted:#666660;--line:#232323;--accent:#C0392B;--card:#131313;--r:10px;--nh:64px}
+    [data-theme=red]{--bg:#0A0000;--surface:#1A0000;--ink:#FFE0E0;--muted:#884444;--line:#2A0A0A;--accent:#E53935;--card:#110000}
+    [data-theme=carbon]{--bg:#0A0A0A;--surface:#141414;--ink:#E8E8E8;--muted:#505050;--line:#1E1E1E;--accent:#BB86FC;--card:#0F0F0F}
+    [data-theme=abyss]{--bg:#020408;--surface:#0A1020;--ink:#C8D8F0;--muted:#3A5070;--line:#101828;--accent:#1E90FF;--card:#050C18}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.6;transition:background .3s,color .3s}
+
+    /* THEME PANEL */
+    .tbtn{position:fixed;bottom:24px;right:24px;z-index:500;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--bg);border:none;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:opacity .2s}
+    .tbtn:hover{opacity:.75}
+    .tpanel{position:fixed;bottom:80px;right:24px;z-index:500;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;width:250px;box-shadow:0 8px 32px rgba(0,0,0,.12);display:none}
+    .tpanel.open{display:block}
+    .tpanel h4{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+    .topts{display:flex;flex-direction:column;gap:7px}
+    .topt{display:flex;align-items:center;gap:10px;padding:7px 11px;border-radius:6px;cursor:pointer;border:1px solid transparent;font-size:13px;transition:background .15s,border-color .15s}
+    .topt:hover{background:var(--surface)}
+    .topt.active{border-color:var(--accent);background:var(--surface)}
+    .tdot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+    .tsec{margin-top:14px;border-top:1px solid var(--line);padding-top:13px}
+    .tsec label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px}
+    .fopts{display:flex;gap:6px}
+    .fopt{flex:1;padding:6px;text-align:center;border:1px solid var(--line);border-radius:6px;font-size:12px;cursor:pointer;transition:all .15s}
+    .fopt:hover,.fopt.active{border-color:var(--accent);background:var(--surface)}
+    .tinput{font-family:'DM Mono',monospace;font-size:12px;width:100%;padding:6px 8px;background:var(--surface);border:1px solid var(--line);border-radius:6px;color:var(--ink);outline:none;margin-top:4px}
+
+    /* NAV */
+    nav{position:sticky;top:0;z-index:100;height:var(--nh);display:flex;align-items:center;justify-content:space-between;padding:0 48px;background:var(--bg);border-bottom:1px solid var(--line);transition:background .3s}
+    .logo{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.1em;color:var(--ink);text-decoration:none;font-weight:500;cursor:pointer}
+    .nlinks{display:flex;gap:4px;list-style:none}
+    .nlinks a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 11px;border-radius:6px;transition:all .15s;white-space:nowrap;cursor:pointer}
+    .nlinks a:hover,.nlinks a.active{color:var(--ink);background:var(--surface)}
+    .ncta{background:var(--accent)!important;color:#fff!important;font-weight:500!important}
+    .ncta:hover{opacity:.85;background:var(--accent)!important}
+
+    /* PAGES */
+    .page{display:none;min-height:calc(100vh - var(--nh))}
+    .page.active{display:block}
+
+    /* SHARED */
+    .sec{padding:64px 48px;border-bottom:1px solid var(--line)}
+    .sec:last-child{border-bottom:none}
+    .ey{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;color:var(--accent);text-transform:uppercase;margin-bottom:14px}
+    .ttl{font-size:clamp(26px,4vw,48px);font-weight:300;letter-spacing:-.03em;line-height:1.08;margin-bottom:14px}
+    .sub{font-size:15px;color:var(--muted);font-weight:300;max-width:500px;line-height:1.7}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:40px}
+    .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:40px}
+    .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:36px}
+    .cell{background:var(--bg);padding:38px 32px;transition:background .2s}
+    .cell:hover{background:var(--surface)}
+    .cn{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:14px}
+    .cell h3{font-size:17px;font-weight:500;margin-bottom:9px}
+    .cell p{font-size:13px;color:var(--muted);line-height:1.75}
+    .bdg{display:inline-block;margin-top:11px;font-size:11px;font-family:'DM Mono',monospace;background:var(--surface);color:var(--accent);padding:3px 10px;border-radius:20px;border:1px solid var(--line)}
+
+    /* HERO */
+    .hero{padding:76px 48px 68px;border-bottom:1px solid var(--line)}
+    .hero h1{font-size:clamp(38px,6vw,76px);font-weight:300;line-height:1.06;letter-spacing:-.035em;margin-bottom:18px;max-width:740px}
+    .hero h1 em{font-style:italic;color:var(--muted)}
+    .hero p{font-size:16px;color:var(--muted);font-weight:300;max-width:440px;line-height:1.7;margin-bottom:32px}
+    .hbtns{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{padding:11px 26px;border-radius:6px;font-size:13px;font-weight:500;text-decoration:none;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:opacity .2s,background .2s;display:inline-block}
+    .bdk{background:var(--ink);color:var(--bg)}.bdk:hover{opacity:.75}
+    .bol{background:transparent;color:var(--ink);border:1px solid var(--line)}.bol:hover{border-color:var(--ink);background:var(--surface)}
+    .bac{background:var(--accent);color:#fff}.bac:hover{opacity:.85}
+
+    /* STEPS */
+    .steps{margin-top:44px}
+    .step{display:grid;grid-template-columns:44px 1fr;gap:18px;padding:26px 0;border-top:1px solid var(--line)}
+    .step:last-child{border-bottom:1px solid var(--line)}
+    .sn{font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);padding-top:3px}
+    .step h3{font-size:15px;font-weight:500;margin-bottom:5px}
+    .step p{font-size:13px;color:var(--muted);line-height:1.7;max-width:580px}
+
+    /* PRICING */
+    .pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;margin-top:44px}
+    .plan{border:1px solid var(--line);border-radius:var(--r);padding:32px 28px;position:relative;transition:border-color .2s;background:var(--card)}
+    .plan:hover{border-color:var(--accent)}
+    .plan.ft{border-color:var(--accent)}
+    .pbdg{position:absolute;top:-11px;left:26px;background:var(--accent);color:#fff;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.1em;padding:3px 11px;border-radius:20px}
+    .pname{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+    .pprice{font-size:46px;font-weight:300;letter-spacing:-.04em;margin:10px 0 3px;line-height:1}
+    .pprice sup{font-size:19px;vertical-align:super}
+    .pper{font-size:12px;color:var(--muted);margin-bottom:14px}
+    .pdesc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:20px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+    .pitems{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+    .pitems li{font-size:13px;display:flex;align-items:flex-start;gap:8px}
+    .pitems li::before{content:'—';color:var(--accent);flex-shrink:0}
+    .pcta{display:block;text-align:center}
+
+    /* ANALYSIS */
+    .anlz{background:var(--surface);border-radius:var(--r);padding:24px 28px;margin-top:40px;border:1px solid var(--line)}
+    .anlz h4{font-size:12px;font-family:'DM Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+    .ar{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--line);font-size:13px;gap:8px;flex-wrap:wrap}
+    .ar:last-child{border-bottom:none}
+    .ar .sv{color:var(--muted);flex:1}
+    .ar .mk{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+    .ar .ou{font-family:'DM Mono',monospace;font-weight:500;color:var(--accent)}
+
+    /* CONTACT */
+    .cwrap{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start}
+    .cititle{font-size:26px;font-weight:300;letter-spacing:-.02em;margin:14px 0 10px}
+    .ci p{font-size:13px;color:var(--muted);line-height:1.7}
+    .chs{margin-top:28px;display:flex;flex-direction:column;gap:12px}
+    .ch{display:flex;align-items:center;gap:10px}
+    .chd{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+    .ch span{font-size:13px;color:var(--muted)}
+    .ch a{font-size:13px;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line)}
+    .ch a:hover{border-color:var(--ink)}
+    .form{display:flex;flex-direction:column;gap:13px}
+    .f{display:flex;flex-direction:column;gap:5px}
+    .f label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+    .f input,.f select,.f textarea{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);background:transparent;border:none;border-bottom:1px solid var(--line);padding:9px 0;outline:none;transition:border-color .2s}
+    .f input:focus,.f select:focus,.f textarea:focus{border-color:var(--ink)}
+    .f textarea{min-height:80px;resize:none}
+    .nstatus{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace;padding:8px 12px;background:var(--surface);border-radius:6px;border-left:3px solid var(--accent);display:none}
+    .nstatus.show{display:block}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--line);padding:22px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:var(--bg)}
+    footer span{font-size:12px;color:var(--muted)}
+
+    /* RESPONSIVE */
+    @media(max-width:860px){
+      nav{padding:0 18px}
+      .nlinks{display:none}
+      .hero{padding:52px 20px 44px}
+      .sec{padding:52px 20px}
+      .g2,.g3,.g4{grid-template-columns:1fr}
+      .cwrap{grid-template-columns:1fr;gap:40px}
+      footer{padding:18px 20px;flex-direction:column;align-items:flex-start}
+      .tpanel{right:16px;bottom:74px}
+    }
+
+    /* REVEAL — elementos ficam visíveis por padrão na página ativa */
+    .r{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+    .r.on{opacity:1 !important;transform:none !important}
+    .page.active .r{opacity:1;transform:none}
+
+    /* CUSTOM SELECT */
+    .csel{position:relative;width:100%}
+    .csel-trigger{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:13px;color:var(--muted);transition:border-color .2s;user-select:none}
+    .csel-trigger:hover,.csel.open .csel-trigger{border-color:var(--ink);color:var(--ink)}
+    .csel-arrow{font-size:11px;transition:transform .2s;flex-shrink:0}
+    .csel.open .csel-arrow{transform:rotate(180deg)}
+    .csel-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r);z-index:200;max-height:260px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.1);display:none}
+    .csel.open .csel-dropdown{display:block}
+    .csel-group{padding:10px 14px 4px;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border-top:1px solid var(--line)}
+    .csel-group:first-child{border-top:none}
+    .csel-opt{padding:9px 14px;font-size:13px;cursor:pointer;transition:background .15s;color:var(--ink)}
+    .csel-opt:hover{background:var(--surface)}
+    .csel-opt.selected{color:var(--accent);font-weight:500}
+  </style>
+</head>
+<body data-theme="dark">
+
+<!-- NAV -->
+<nav>
+  <span class="logo" onclick="sp('pc')">YKARION CORP</span>
+  <a href="card.html" target="_blank" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--muted);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:6px;transition:all .2s;white-space:nowrap" onmouseover="this.style.borderColor='var(--ink)';this.style.color='var(--ink)'" onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--muted)'">⚡ Cartão Digital</a>
+  <ul class="nlinks">
+    <li><a onclick="sp('pc')" id="nav-pc" class="active">💻 Computação</a></li>
+    <li><a onclick="sp('android')" id="nav-android">📱 Android</a></li>
+    <li><a onclick="sp('scrcpy')" id="nav-scrcpy">🖥 Scrcpy</a></li>
+    <li><a onclick="sp('precos')" id="nav-precos">💰 Preços</a></li>
+    <li><a onclick="sp('contato')" id="nav-contato" class="ncta">Contratar</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════ PAGE: COMPUTAÇÃO ═══════════════ -->
+<div class="page active" id="page-pc">
+  <div class="hero">
+    <p class="ey">Serviços de Computação — Fortaleza</p>
+    <h1>Seu PC rodando<br><em>como novo.</em></h1>
+    <p>Formatação, upgrade, limpeza e suporte técnico completo. Diagnóstico sempre gratuito.</p>
+    <div class="hbtns">
+      <a class="btn bdk" onclick="sp('precos')">Ver preços</a>
+      <a class="btn bol" onclick="sp('contato')">Pedir orçamento →</a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Serviços</p>
+    <h2 class="ttl">O que fazemos</h2>
+    <p class="sub">Você só paga se aprovar o orçamento. Garantia de 30 dias em todos os serviços.</p>
+    <div class="g2">
+      <div class="cell"><div class="cn">01</div><h3>Formatação Completa</h3><p>Reinstalação do Windows com backup dos seus arquivos, drivers, programas essenciais (navegador, Office, antivírus) e otimização do sistema.</p><span class="bdg">a partir de R$ 120</span></div>
+      <div class="cell"><div class="cn">02</div><h3>Upgrade de Hardware</h3><p>Troca de HD por SSD (até 5× mais rápido), mais memória RAM, nova placa de vídeo. Consultoria inclusa para escolher os melhores componentes pelo melhor preço.</p><span class="bdg">mão de obra a partir de R$ 80</span></div>
+      <div class="cell"><div class="cn">03</div><h3>Limpeza Física</h3><p>Limpeza interna de poeira, troca de pasta térmica, verificação de capacitores e revisão geral. Prolonga anos na vida útil do equipamento.</p><span class="bdg">a partir de R$ 70</span></div>
+      <div class="cell"><div class="cn">04</div><h3>Remoção de Vírus</h3><p>Varredura completa, remoção de malware, adware e spyware sem precisar formatar — quando possível.</p><span class="bdg">a partir de R$ 80</span></div>
+      <div class="cell"><div class="cn">05</div><h3>Montagem de PC</h3><p>Montagem personalizada com os componentes que você escolheu, ou te ajudamos a escolher. Inclui Windows e todos os programas.</p><span class="bdg">a partir de R$ 150</span></div>
+      <div class="cell"><div class="cn">06</div><h3>Suporte Remoto</h3><p>Problemas de software, configurações e dúvidas técnicas resolvidos de forma remota, sem você precisar sair de casa. Seguro e rápido.</p><span class="bdg">R$ 60/hora</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Processo</p>
+    <h2 class="ttl">Como funciona</h2>
+    <div class="steps">
+      <div class="step"><div class="sn">01</div><div><h3>Diagnóstico gratuito</h3><p>Avaliamos o equipamento sem custo. Você recebe orçamento detalhado antes de qualquer serviço.</p></div></div>
+      <div class="step"><div class="sn">02</div><div><h3>Execução com agilidade</h3><p>Com sua aprovação, realizamos o serviço. A maioria dos serviços é concluída em até 24 horas.</p></div></div>
+      <div class="step"><div class="sn">03</div><div><h3>Entrega com garantia</h3><p>Garantia de 30 dias em todo serviço. Se o problema voltar, voltamos sem custo adicional.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: ANDROID ═══════════════ -->
+<div class="page" id="page-android">
+  <div class="hero">
+    <p class="ey">Serviços Android — Fortaleza</p>
+    <h1>Seu Android<br><em>mais leve e rápido.</em></h1>
+    <p>Remoção de bloatware, otimização, privacidade e backup. Sem root obrigatório, sem riscos.</p>
+    <div class="hbtns">
+      <a class="btn bdk" onclick="sp('precos')">Ver preços</a>
+      <a class="btn bol" onclick="sp('contato')">Solicitar serviço →</a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Serviços</p>
+    <h2 class="ttl">O que removemos e melhoramos</h2>
+    <p class="sub">Usando ADB e ferramentas avançadas, melhoramos seu Android sem risco de brick ou perda de garantia.</p>
+    <div class="g2">
+      <div class="cell"><div class="cn">01</div><h3>Remoção de Bloatware</h3><p>Removemos apps pré-instalados inúteis — Facebook, jogos de operadora, apps de fabricante — que consomem memória, bateria e dados sem você usar.</p><span class="bdg">a partir de R$ 60</span></div>
+      <div class="cell"><div class="cn">02</div><h3>Otimização de Performance</h3><p>Ajuste de animações, gerenciamento de apps em segundo plano, configuração de RAM e bateria. Seu celular vai parecer novo.</p><span class="bdg">a partir de R$ 60</span></div>
+      <div class="cell"><div class="cn">03</div><h3>Configuração de Privacidade</h3><p>Revogação de permissões desnecessárias, bloqueio de rastreadores, DNS seguro e desativação de telemetria de fabricantes.</p><span class="bdg">a partir de R$ 50</span></div>
+      <div class="cell"><div class="cn">04</div><h3>Atualização e Desbloqueio</h3><p>Atualização manual do Android, desbloqueio de operadora e configuração de APN para máxima velocidade com qualquer chip.</p><span class="bdg">a partir de R$ 70</span></div>
+      <div class="cell"><div class="cn">05</div><h3>Backup e Migração</h3><p>Transferência completa entre aparelhos — contatos, fotos, apps, configurações e WhatsApp — sem perder nada.</p><span class="bdg">a partir de R$ 80</span></div>
+      <div class="cell"><div class="cn">06</div><h3>Pacote Android Completo</h3><p>Bloatware + otimização + privacidade + backup em uma única sessão. O melhor custo-benefício para transformar seu Android.</p><span class="bdg">R$ 180 (combo)</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Compatibilidade</p>
+    <h2 class="ttl">Dispositivos suportados</h2>
+    <div class="g4">
+      <div class="cell"><h3>Samsung</h3><p>Galaxy S, A, M, Note. One UI 4.0+</p></div>
+      <div class="cell"><h3>Motorola</h3><p>Moto G, E e Edge. Android 10+</p></div>
+      <div class="cell"><h3>Xiaomi</h3><p>MIUI 12+, Redmi e POCO</p></div>
+      <div class="cell"><h3>Outros</h3><p>LG, Nokia, Positivo e qualquer Android 8+</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: SCRCPY ═══════════════ -->
+<div class="page" id="page-scrcpy">
+  <div class="hero">
+    <p class="ey">Menu Scrcpy + Painel Próprio</p>
+    <h1>Android no PC<br><em>com painel visual.</em></h1>
+    <p>Instalamos um sistema completo de controle Android no seu computador — painel gráfico exclusivo, sem linha de comando.</p>
+    <div class="hbtns">
+      <a class="btn bdk" onclick="sp('contato')">Instalar agora</a>
+      <a class="btn bol" onclick="sp('precos')">Ver planos →</a>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">O sistema</p>
+    <h2 class="ttl">O que está incluso</h2>
+    <p class="sub">Uma solução completa: scrcpy + painel gráfico + suporte técnico. USB e Wi-Fi.</p>
+    <div class="g3">
+      <div class="cell"><div class="cn">01</div><h3>Menu Scrcpy</h3><p>Interface gráfica completa. Conecte seu Android com 1 clique — sem terminal, sem comandos.</p></div>
+      <div class="cell"><div class="cn">02</div><h3>Painel de Controle</h3><p>Gerencie resolução, FPS, bitrate, atalhos e múltiplos dispositivos simultaneamente.</p></div>
+      <div class="cell"><div class="cn">03</div><h3>Gravação de Tela</h3><p>Grave o Android diretamente no PC em MP4, com qualidade até 1080p.</p></div>
+      <div class="cell"><div class="cn">04</div><h3>Multi-dispositivo</h3><p>Controle vários celulares ou tablets ao mesmo tempo em uma tela só.</p></div>
+      <div class="cell"><div class="cn">05</div><h3>Conexão Wi-Fi</h3><p>Após setup inicial via USB, use sem fio com latência mínima na mesma rede.</p></div>
+      <div class="cell"><div class="cn">06</div><h3>Suporte 30 dias</h3><p>Instalação guiada + suporte pós-instalação por 30 dias incluído.</p></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Instalação</p>
+    <h2 class="ttl">Como instalamos</h2>
+    <div class="steps">
+      <div class="step"><div class="sn">01</div><div><h3>Agendamento</h3><p>Por videochamada, acesso remoto ou presencialmente em Fortaleza e região metropolitana.</p></div></div>
+      <div class="step"><div class="sn">02</div><div><h3>Instalação e configuração</h3><p>Instalamos o Menu Scrcpy, configuramos o painel e ativamos o modo desenvolvedor no seu Android.</p></div></div>
+      <div class="step"><div class="sn">03</div><div><h3>Treinamento</h3><p>Mostramos todas as funções. Documentação personalizada enviada ao final.</p></div></div>
+      <div class="step"><div class="sn">04</div><div><h3>Suporte 30 dias incluso</h3><p>Qualquer dúvida nos primeiros 30 dias, resolvemos sem custo adicional.</p></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: PREÇOS ═══════════════ -->
+<div class="page" id="page-precos">
+  <div class="hero">
+    <p class="ey">Tabela de Preços — Fortaleza, CE</p>
+    <h1>Transparente,<br><em>sem surpresas.</em></h1>
+    <p>Preços baseados em pesquisa de mercado local em Fortaleza. Diagnóstico sempre gratuito.</p>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Computação</p>
+    <h2 class="ttl">PC e Notebook</h2>
+    <div class="pgrid">
+      <div class="plan">
+        <div class="pname">Formatação Básica</div>
+        <div class="pprice"><sup>R$</sup>120</div>
+        <div class="pper">por dispositivo</div>
+        <div class="pdesc">Windows reinstalado limpo com drivers e programas essenciais.</div>
+        <ul class="pitems"><li>Reinstalação do Windows</li><li>Drivers instalados</li><li>Programas básicos</li><li>Garantia 30 dias</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+      <div class="plan ft">
+        <div class="pbdg">MAIS PEDIDO</div>
+        <div class="pname">Formatação Completa</div>
+        <div class="pprice"><sup>R$</sup>180</div>
+        <div class="pper">por dispositivo</div>
+        <div class="pdesc">Backup + formatação + programas + otimização. O pacote completo.</div>
+        <ul class="pitems"><li>Backup dos seus arquivos</li><li>Windows limpo reinstalado</li><li>Drivers + programas essenciais</li><li>Office + antivírus configurados</li><li>Otimização completa</li><li>Garantia 30 dias</li></ul>
+        <a class="btn bac pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+      <div class="plan">
+        <div class="pname">Upgrade + Formatação</div>
+        <div class="pprice"><sup>R$</sup>220</div>
+        <div class="pper">mão de obra (peças à parte)</div>
+        <div class="pdesc">Troca de HD por SSD + formatação completa. Transforma qualquer PC lento.</div>
+        <ul class="pitems"><li>Instalação do SSD</li><li>Formatação completa inclusa</li><li>Config. de memória RAM</li><li>Diagnóstico de hardware</li><li>Garantia 30 dias</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+    </div>
+    <div class="anlz">
+      <h4>📊 Pesquisa de mercado — Fortaleza, CE 2025</h4>
+      <div class="ar"><span class="sv">Formatação básica (mercado local)</span><span class="mk">R$ 100–150</span><span class="ou">Nosso: R$ 120</span></div>
+      <div class="ar"><span class="sv">Formatação completa c/ backup</span><span class="mk">R$ 150–200</span><span class="ou">Nosso: R$ 180</span></div>
+      <div class="ar"><span class="sv">Limpeza física</span><span class="mk">R$ 60–100</span><span class="ou">Nosso: R$ 70</span></div>
+      <div class="ar"><span class="sv">Remoção de vírus</span><span class="mk">R$ 80–120</span><span class="ou">Nosso: R$ 80</span></div>
+      <div class="ar"><span class="sv">Montagem de PC</span><span class="mk">R$ 150–300</span><span class="ou">Nosso: R$ 150</span></div>
+      <div class="ar"><span class="sv">Suporte remoto/hora</span><span class="mk">R$ 60–80/h</span><span class="ou">Nosso: R$ 60/h</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Android</p>
+    <h2 class="ttl">Serviços para Android</h2>
+    <div class="pgrid">
+      <div class="plan">
+        <div class="pname">Serviço Pontual</div>
+        <div class="pprice"><sup>R$</sup>60</div>
+        <div class="pper">por serviço</div>
+        <div class="pdesc">Remoção de bloatware OU otimização OU privacidade. Um serviço à escolha.</div>
+        <ul class="pitems"><li>1 serviço à escolha</li><li>Diagnóstico incluso</li><li>Suporte 7 dias</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+      <div class="plan ft">
+        <div class="pbdg">MELHOR CUSTO</div>
+        <div class="pname">Pacote Android</div>
+        <div class="pprice"><sup>R$</sup>180</div>
+        <div class="pper">por dispositivo</div>
+        <div class="pdesc">Bloatware + otimização + privacidade + backup. Tudo em uma sessão.</div>
+        <ul class="pitems"><li>Remoção de bloatware</li><li>Otimização completa</li><li>Privacidade configurada</li><li>Backup de segurança</li><li>Suporte 30 dias</li></ul>
+        <a class="btn bac pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+      <div class="plan">
+        <div class="pname">Migração de Aparelho</div>
+        <div class="pprice"><sup>R$</sup>80</div>
+        <div class="pper">por transferência</div>
+        <div class="pdesc">Todos os dados transferidos para o novo celular sem perda.</div>
+        <ul class="pitems"><li>Contatos, fotos e vídeos</li><li>Apps e configurações</li><li>WhatsApp completo</li><li>Suporte 7 dias</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+    </div>
+    <div class="anlz">
+      <h4>📊 Pesquisa de mercado — Android em Fortaleza, CE 2025</h4>
+      <div class="ar"><span class="sv">Remoção de bloatware (técnicos locais)</span><span class="mk">R$ 50–100</span><span class="ou">Nosso: R$ 60</span></div>
+      <div class="ar"><span class="sv">Otimização de Android</span><span class="mk">R$ 50–80</span><span class="ou">Nosso: R$ 60</span></div>
+      <div class="ar"><span class="sv">Migração/backup de dados</span><span class="mk">R$ 60–100</span><span class="ou">Nosso: R$ 80</span></div>
+      <div class="ar"><span class="sv">Pacote completo Android</span><span class="mk">R$ 150–250</span><span class="ou">Nosso: R$ 180</span></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="ey">Menu Scrcpy</p>
+    <h2 class="ttl">Instalação e Suporte</h2>
+    <div class="pgrid">
+      <div class="plan">
+        <div class="pname">Instalação Única</div>
+        <div class="pprice"><sup>R$</sup>120</div>
+        <div class="pper">pagamento único</div>
+        <div class="pdesc">Instalação e configuração completa do Menu Scrcpy com painel visual.</div>
+        <ul class="pitems"><li>Instalação guiada</li><li>Configuração do painel</li><li>Treinamento de uso</li><li>Suporte 7 dias</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar</a>
+      </div>
+      <div class="plan ft">
+        <div class="pbdg">RECOMENDADO</div>
+        <div class="pname">Instalação + Suporte</div>
+        <div class="pprice"><sup>R$</sup>97</div>
+        <div class="pper">por mês</div>
+        <div class="pdesc">Instalação inclusa + suporte contínuo e atualizações todo mês.</div>
+        <ul class="pitems"><li>Instalação completa inclusa</li><li>Suporte prioritário 24h</li><li>Atualizações automáticas</li><li>Consultoria mensal</li><li>Novos dispositivos inclusos</li></ul>
+        <a class="btn bac pcta" onclick="sp('contato')">Assinar</a>
+      </div>
+      <div class="plan">
+        <div class="pname">Empresarial</div>
+        <div class="pprice">Custom</div>
+        <div class="pper">sob consulta</div>
+        <div class="pdesc">Para empresas com múltiplos dispositivos e necessidades específicas.</div>
+        <ul class="pitems"><li>Dispositivos ilimitados</li><li>Treinamento da equipe</li><li>SLA por contrato</li><li>Personalização sob demanda</li></ul>
+        <a class="btn bol pcta" onclick="sp('contato')">Solicitar proposta</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PAGE: CONTATO ═══════════════ -->
+<div class="page" id="page-contato">
+  <div class="hero">
+    <p class="ey">Contato</p>
+    <h1>Vamos resolver<br><em>juntos.</em></h1>
+    <p>Me chama no WhatsApp ou preenche o formulário. Respondo em até 2 horas úteis.</p>
+  </div>
+
+  <div class="sec">
+    <div class="cwrap">
+      <div class="ci">
+        <p class="ey">Canais</p>
+        <h2 class="cititle">Me chama por aqui</h2>
+        <p>Atendo por WhatsApp ou presencialmente em Fortaleza e região metropolitana.</p>
+        <div class="chs">
+          <div class="ch"><div class="chd"></div><span>WhatsApp —</span><a href="https://wa.me/5585992844528?text=Olá!%20Vim%20pelo%20site%20Ykarion%20Corp%20e%20gostaria%20de%20um%20orçamento." target="_blank">Clique para conversar ↗</a></div>
+          <div class="ch"><div class="chd"></div><span>Local — Fortaleza e Região Metropolitana</span></div>
+          <div class="ch"><div class="chd"></div><span>Horário — Seg–Sáb, 8h às 20h</span></div>
+        </div>
+
+      </div>
+
+      <form class="form" onsubmit="sendForm(event)">
+        <div class="f"><label>Nome</label><input type="text" id="fn" placeholder="Seu nome" required/></div>
+        <div class="f"><label>WhatsApp</label><input type="tel" id="fw" placeholder="(DD) 99999-9999"/></div>
+        <div class="f">
+          <label>Serviço de interesse</label>
+          <div class="csel" id="csel">
+            <div class="csel-trigger" onclick="toggleSel()">
+              <span id="csel-val">Selecione um serviço...</span>
+              <span class="csel-arrow">▾</span>
+            </div>
+            <div class="csel-dropdown" id="csel-dd">
+              <div class="csel-group">Computação</div>
+              <div class="csel-opt" onclick="pickSel(this)">Formatação Básica — R$ 120</div>
+              <div class="csel-opt" onclick="pickSel(this)">Formatação Completa — R$ 180</div>
+              <div class="csel-opt" onclick="pickSel(this)">Upgrade + Formatação — R$ 220</div>
+              <div class="csel-opt" onclick="pickSel(this)">Limpeza Física — R$ 70</div>
+              <div class="csel-opt" onclick="pickSel(this)">Remoção de Vírus — R$ 80</div>
+              <div class="csel-opt" onclick="pickSel(this)">Montagem de PC — R$ 150</div>
+              <div class="csel-opt" onclick="pickSel(this)">Suporte Remoto — R$ 60/h</div>
+              <div class="csel-group">Android</div>
+              <div class="csel-opt" onclick="pickSel(this)">Serviço Pontual Android — R$ 60</div>
+              <div class="csel-opt" onclick="pickSel(this)">Pacote Android Completo — R$ 180</div>
+              <div class="csel-opt" onclick="pickSel(this)">Migração de Aparelho — R$ 80</div>
+              <div class="csel-group">Scrcpy</div>
+              <div class="csel-opt" onclick="pickSel(this)">Instalação Menu Scrcpy — R$ 120</div>
+              <div class="csel-opt" onclick="pickSel(this)">Instalação + Suporte Mensal — R$ 97/mês</div>
+              <div class="csel-opt" onclick="pickSel(this)">Plano Empresarial — Sob consulta</div>
+            </div>
+          </div>
+          <input type="hidden" id="fs" required/>
+        </div>
+        <div class="f"><label>Mensagem</label><textarea id="fm" placeholder="Me conta o que você precisa..." required></textarea></div>
+        <div id="ns" class="nstatus"></div>
+        <button class="btn bdk" type="submit" id="sb">Enviar mensagem →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span style="font-family:'DM Mono',monospace;font-size:13px;font-weight:500;color:var(--ink)">YKARION CORP</span>
+  <span>Fortaleza e Região Metropolitana</span>
+  <span>© 2025 · Todos os direitos reservados</span>
+</footer>
+
+<!-- THEME BUTTON + PANEL -->
+<button class="tbtn" onclick="togglePanel()" title="Configurar aparência">⚙</button>
+<div class="tpanel" id="tp">
+  <h4>Aparência</h4>
+  <div class="topts">
+    <div class="topt active" onclick="setTheme('dark',this)"><div class="tdot" style="background:#0E0E0E;border:1px solid #333"></div>Dark</div>
+    <div class="topt" onclick="setTheme('red',this)"><div class="tdot" style="background:#E53935"></div>Red Black</div>
+    <div class="topt" onclick="setTheme('carbon',this)"><div class="tdot" style="background:#BB86FC"></div>Carbon</div>
+    <div class="topt" onclick="setTheme('abyss',this)"><div class="tdot" style="background:#1E90FF"></div>Abyss</div>
+  </div>
+  <div class="tsec">
+    <label>Fonte</label>
+    <div class="fopts">
+      <div class="fopt active" onclick="setFont('dm',this)" style="font-family:'DM Sans'">DM</div>
+      <div class="fopt" onclick="setFont('geo',this)" style="font-family:Georgia">Serif</div>
+      <div class="fopt" onclick="setFont('sys',this)">System</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  window.sp = function(id) {
+    document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+    document.querySelectorAll('.nlinks a').forEach(function(a){ a.classList.remove('active'); });
+    var page = document.getElementById('page-' + id);
+    if (page) page.classList.add('active');
+    var nav = document.getElementById('nav-' + id);
+    if (nav) nav.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.setTheme = function(t, el) {
+    document.body.setAttribute('data-theme', t);
+    document.querySelectorAll('.topt').forEach(function(o){ o.classList.remove('active'); });
+    el.classList.add('active');
+    localStorage.setItem('ms-theme', t);
+  };
+
+  window.setFont = function(f, el) {
+    var m = { dm: "'DM Sans',sans-serif", geo: "Georgia,serif", sys: "system-ui,sans-serif" };
+    document.body.style.fontFamily = m[f];
+    document.querySelectorAll('.fopt').forEach(function(o){ o.classList.remove('active'); });
+    el.classList.add('active');
+    localStorage.setItem('ms-font', f);
+  };
+
+  window.togglePanel = function() {
+    document.getElementById('tp').classList.toggle('open');
+  };
+
+  window.sendForm = async function(e) {
+    e.preventDefault();
+    var btn = document.getElementById('sb');
+    var ns = document.getElementById('ns');
+    var nm = document.getElementById('fn').value;
+    var fw = document.getElementById('fw').value || 'não informado';
+    var sv = document.getElementById('fs').value;
+    var ms = document.getElementById('fm').value;
+    btn.textContent = 'Enviando...';
+    btn.disabled = true;
+    try {
+      await fetch('https://ntfy.sh/MEU-SITE', {
+        method: 'POST',
+        headers: { 'Title': 'Contato: ' + nm, 'Tags': 'bell', 'Priority': 'high', 'Content-Type': 'text/plain' },
+        body: '\u{1F464} ' + nm + '\n\u{1F4F1} ' + fw + '\n\u{1F4E6} ' + sv + '\n\u{1F4AC} ' + ms
+      });
+    } catch(ex) {}
+    var waMsg = encodeURIComponent('Olá! Me chamo ' + nm + '.\nZap: ' + fw + '\nServiço: ' + sv + '\nMensagem: ' + ms);
+    window.open('https://wa.me/5585992844528?text=' + waMsg, '_blank');
+    ns.className = 'nstatus show';
+    ns.textContent = '✅ Mensagem enviada! Em breve entraremos em contato.';
+    btn.textContent = 'Enviado ✓';
+    btn.style.background = '#16a34a';
+    e.target.reset();
+    setTimeout(function(){
+      btn.textContent = 'Enviar mensagem →';
+      btn.style.background = '';
+      btn.disabled = false;
+      setTimeout(function(){ ns.className = 'nstatus'; }, 4000);
+    }, 3000);
+  };
+
+  // Restore saved prefs
+  (function() {
+    var t = localStorage.getItem('ms-theme');
+    if (t) document.body.setAttribute('data-theme', t);
+    var f = localStorage.getItem('ms-font');
+    if (f) { var m = { dm: "'DM Sans',sans-serif", geo: "Georgia,serif", sys: "system-ui,sans-serif" }; document.body.style.fontFamily = m[f] || m.dm; }
+
+  })();
+
+
+  window.toggleSel = function() {
+    document.getElementById('csel').classList.toggle('open');
+  };
+  window.pickSel = function(el) {
+    document.querySelectorAll('.csel-opt').forEach(function(o){ o.classList.remove('selected'); });
+    el.classList.add('selected');
+    document.getElementById('csel-val').textContent = el.textContent;
+    document.getElementById('csel-val').style.color = 'var(--ink)';
+    document.getElementById('fs').value = el.textContent;
+    document.getElementById('csel').classList.remove('open');
+  };
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#csel')) document.getElementById('csel').classList.remove('open');
+    if (!e.target.closest('.tpanel') && !e.target.closest('.tbtn')) document.getElementById('tp').classList.remove('open');
+  });
+
+
+  // ── TOKEN GATE ───────────────────────────────────────────
+  // Hide immediately before any render
+  document.documentElement.style.visibility = 'hidden';
+  (async function(){
+    var GATEWAY = 'https://salvatoresilver.github.io/ykarion-corp/';
+    var _s = ['59','6b','39','6d','50','5f','32','30','32','35'];
+    var SECRET = 'ykarion' + String.fromCharCode(95) + _s.map(function(h){return parseInt(h,16)}).map(String.fromCharCode).join('') + 'xK';
+    var window_size = 6 * 3600 * 1000;
+
+    async function genToken(slot) {
+      var enc = new TextEncoder();
+      var key = await crypto.subtle.importKey(
+        'raw', enc.encode(SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+      );
+      var sig = await crypto.subtle.sign('HMAC', key, enc.encode('access:' + slot));
+      return Array.from(new Uint8Array(sig)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('').substring(0,32);
+    }
+
+    try {
+      var stored     = sessionStorage.getItem('yk_token');
+      var storedPrev = sessionStorage.getItem('yk_token_prev');
+      var storedSlot = parseInt(sessionStorage.getItem('yk_slot') || '0');
+      var origin     = sessionStorage.getItem('yk_origin');
+      var cur_slot   = Math.floor(Date.now() / window_size);
+
+      // Token must exist, come from gateway, and slot must be current or previous
+      if (!stored || origin !== 'gateway') throw new Error('no_token');
+
+      var validSlots = [cur_slot, cur_slot - 1];
+      if (validSlots.indexOf(storedSlot) === -1) throw new Error('expired');
+
+      var expected     = await genToken(storedSlot);
+      var expectedPrev = await genToken(storedSlot - 1);
+
+      var valid = (stored === expected || stored === expectedPrev ||
+                   storedPrev === expected || storedPrev === expectedPrev);
+
+      if (!valid) throw new Error('invalid_token');
+
+      // All good — show the page
+      document.documentElement.style.visibility = 'visible';
+
+    } catch(e) {
+      // Block and redirect to gateway
+      document.documentElement.style.display = 'none';
+      sessionStorage.clear();
+      window.location.replace('https://salvatoresilver.github.io/ykarion-corp/');
+    }
+  })();
+  // ─────────────────────────────────────────────────────────
+  // ── SECURITY ──────────────────────────────────────────
+  (function(){
+    // Disable right click
+    document.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    // Disable common inspect shortcuts
+    document.addEventListener('keydown', function(e){
+      if(e.key==='F12') e.preventDefault();
+      if(e.ctrlKey && e.shiftKey && ['I','J','C','K'].includes(e.key)) e.preventDefault();
+      if(e.ctrlKey && e.key==='U') e.preventDefault();
+      if(e.ctrlKey && e.key==='S') e.preventDefault();
+      if(e.ctrlKey && e.key==='P') e.preventDefault();
+    });
+    // Devtools size detection
+    var threshold = 160;
+    var check = function(){
+      if(window.outerWidth - window.innerWidth > threshold || window.outerHeight - window.innerHeight > threshold){
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0E0E0E;color:#C0392B;font-family:monospace;font-size:18px;letter-spacing:.1em">⛔ ACESSO NEGADO</div>';
+      }
+    };
+    setInterval(check, 1000);
+    // Disable text selection
+    document.addEventListener('selectstart', function(e){ e.preventDefault(); });
+    // Disable drag
+    document.addEventListener('dragstart', function(e){ e.preventDefault(); });
+    // Disable copy
+    document.addEventListener('copy', function(e){ e.preventDefault(); });
+  })();
+  // ──────────────────────────────────────────────────────
+</script>
+</body>
+</html>

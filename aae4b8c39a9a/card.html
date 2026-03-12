@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ykarion — Cartão Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <script>
+  document.documentElement.style.visibility='hidden';
+  (async function(){
+    var GW='https://salvatoresilver.github.io/ykarion-corp/';
+    var _s=['59','6b','39','6d','50','5f','32','30','32','35'];
+    var SECRET='ykarion'+String.fromCharCode(95)+_s.map(function(h){return parseInt(h,16)}).map(String.fromCharCode).join('')+'xK';
+    var ws=6*3600*1000;
+    async function gt(slot){
+      var e=new TextEncoder();
+      var k=await crypto.subtle.importKey('raw',e.encode(SECRET),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+      var s=await crypto.subtle.sign('HMAC',k,e.encode('access:'+slot));
+      return Array.from(new Uint8Array(s)).map(function(b){return b.toString(16).padStart(2,'0')}).join('').substring(0,32);
+    }
+    try{
+      var st=sessionStorage.getItem('yk_token');
+      var og=sessionStorage.getItem('yk_origin');
+      var sl=parseInt(sessionStorage.getItem('yk_slot')||'0');
+      var cs=Math.floor(Date.now()/ws);
+      if(!st||og!=='gateway')throw 0;
+      if([cs,cs-1].indexOf(sl)===-1)throw 0;
+      var ex=await gt(sl);
+      var ep=await gt(sl-1);
+      if(st!==ex&&st!==ep&&sessionStorage.getItem('yk_token_prev')!==ex&&sessionStorage.getItem('yk_token_prev')!==ep)throw 0;
+      document.documentElement.style.visibility='visible';
+    }catch(e){
+      document.documentElement.style.display='none';
+      sessionStorage.clear();
+      window.location.replace('https://salvatoresilver.github.io/ykarion-corp/');
+    }
+  })();
+</script>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #0a0000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated grid background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(200,0,0,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(200,0,0,.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      animation: gridScroll 20s linear infinite;
+    }
+    @keyframes gridScroll {
+      0%   { background-position: 0 0; }
+      100% { background-position: 40px 40px; }
+    }
+
+    /* Radial glow behind card */
+    body::after {
+      content: '';
+      position: fixed;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(200,0,0,.18) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* CARD */
+    .card {
+      position: relative; z-index: 10;
+      width: min(480px, 94vw);
+      background: linear-gradient(160deg, #1a0000 0%, #0d0000 60%, #000 100%);
+      border: 1px solid rgba(220,30,30,.5);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,60,60,.1),
+        0 0 60px rgba(200,0,0,.3),
+        0 40px 80px rgba(0,0,0,.7);
+      animation: cardIn .8s cubic-bezier(.22,1,.36,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateY(40px) scale(.97); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* Scan line effect */
+    .card::before {
+      content: '';
+      position: absolute; inset: 0; z-index: 1;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,.08) 2px,
+        rgba(0,0,0,.08) 4px
+      );
+      pointer-events: none;
+    }
+
+    /* Moving scan beam */
+    .card::after {
+      content: '';
+      position: absolute; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(255,60,60,.6), transparent);
+      animation: scan 4s ease-in-out infinite;
+      z-index: 2;
+    }
+    @keyframes scan {
+      0%   { top: 0%; opacity:0; }
+      10%  { opacity:1; }
+      90%  { opacity:1; }
+      100% { top: 100%; opacity:0; }
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(135deg, #c00010 0%, #8b0000 50%, #3d0000 100%);
+      padding: 28px 28px 24px;
+      position: relative; z-index: 3;
+      border-bottom: 1px solid rgba(255,80,80,.2);
+    }
+    .header-top {
+      display: flex; align-items: center; gap: 16px;
+      margin-bottom: 10px;
+    }
+    .logo-icon {
+      width: 52px; height: 52px;
+      background: rgba(0,0,0,.5);
+      border: 1px solid rgba(255,100,100,.4);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(255,60,60,.3), inset 0 1px 0 rgba(255,255,255,.1);
+      animation: iconPulse 3s ease-in-out infinite;
+    }
+    @keyframes iconPulse {
+      0%,100% { box-shadow: 0 0 20px rgba(255,60,60,.3), inset 0 1px 0 rgba(255,255,255,.1); }
+      50%      { box-shadow: 0 0 35px rgba(255,60,60,.6), inset 0 1px 0 rgba(255,255,255,.1); }
+    }
+    .brand-name {
+      font-size: 42px; font-weight: 700;
+      color: #fff;
+      letter-spacing: .08em;
+      text-shadow: 0 0 30px rgba(255,120,120,.5);
+      line-height: 1;
+    }
+    .tagline {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: .22em;
+      color: rgba(255,160,160,.8);
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 10px;
+      padding-left: 4px;
+    }
+    .tagline::before {
+      content: '';
+      display: block; width: 28px; height: 1px;
+      background: rgba(255,120,120,.8);
+    }
+
+    /* BODY */
+    .body { padding: 24px 24px 20px; position: relative; z-index: 3; }
+
+    /* SECTION TITLE */
+    .stitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; letter-spacing: .18em;
+      color: #ff4444;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    /* SKILLS GRID */
+    .skills {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px; margin-bottom: 24px;
+    }
+    .skill {
+      border: 1px solid rgba(200,0,0,.35);
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13px; font-weight: 600;
+      letter-spacing: .1em; color: #ddd;
+      background: rgba(200,0,0,.06);
+      cursor: default;
+      transition: all .2s;
+      animation: skillIn .6s both;
+    }
+    .skill:nth-child(1){ animation-delay:.1s }
+    .skill:nth-child(2){ animation-delay:.2s }
+    .skill:nth-child(3){ animation-delay:.3s }
+    .skill:nth-child(4){ animation-delay:.4s }
+    @keyframes skillIn {
+      from { opacity:0; transform:translateX(-10px); }
+      to   { opacity:1; transform:none; }
+    }
+    .skill:hover {
+      border-color: rgba(255,60,60,.7);
+      background: rgba(200,0,0,.15);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(200,0,0,.2);
+    }
+    .skill-icon { font-size: 16px; flex-shrink: 0; }
+
+    /* DIVIDER */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
+    }
+    .divider-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200,0,0,.4), transparent);
+    }
+    .divider-icon { font-size: 14px; color: rgba(255,80,80,.6); }
+
+    /* CONTACT */
+    .contact-title {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; letter-spacing: .18em;
+      color: #00e676;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .wa-btn {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: linear-gradient(135deg, #00c853, #00a040);
+      border: none; border-radius: 10px;
+      padding: 16px 24px;
+      color: #fff; font-family: 'Rajdhani', sans-serif;
+      font-size: 20px; font-weight: 700; letter-spacing: .06em;
+      text-decoration: none; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(0,200,80,.3), 0 0 0 1px rgba(0,200,80,.2);
+      transition: all .2s;
+      width: 100%;
+      animation: waIn .7s .5s both;
+    }
+    @keyframes waIn {
+      from { opacity:0; transform:scale(.96); }
+      to   { opacity:1; transform:scale(1); }
+    }
+    .wa-btn:hover {
+      background: linear-gradient(135deg, #00e676, #00c853);
+      box-shadow: 0 6px 32px rgba(0,220,100,.5), 0 0 0 1px rgba(0,220,100,.3);
+      transform: translateY(-1px);
+    }
+    .wa-btn:active { transform: scale(.98); }
+    .wa-icon { font-size: 22px; }
+
+    /* SITE LINK */
+    .site-link {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 12px;
+      padding: 11px 20px;
+      border: 1px solid rgba(200,0,0,.4);
+      border-radius: 8px;
+      color: rgba(255,140,140,.9);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; letter-spacing: .1em;
+      text-decoration: none;
+      background: rgba(200,0,0,.06);
+      transition: all .2s;
+      width: 100%;
+      text-align: center;
+    }
+    .site-link:hover {
+      border-color: rgba(255,60,60,.8);
+      background: rgba(200,0,0,.15);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(200,0,0,.2);
+    }
+
+    /* FOOTER */
+    .footer {
+      border-top: 1px solid rgba(200,0,0,.2);
+      padding: 14px 24px;
+      display: flex; justify-content: center;
+      position: relative; z-index: 3;
+    }
+    .footer-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; letter-spacing: .2em;
+      color: rgba(200,0,0,.5);
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .footer-text span { color: rgba(255,80,80,.7); }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-icon">⚡</div>
+      <div class="brand-name">YKARION</div>
+    </div>
+    <div class="tagline">Suporte Técnico Avançado</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- ESPECIALIDADES -->
+    <div class="stitle">🔧 Especialidades</div>
+    <div class="skills">
+      <div class="skill"><span class="skill-icon">🖥</span> WINDOWS</div>
+      <div class="skill"><span class="skill-icon">🐧</span> LINUX</div>
+      <div class="skill"><span class="skill-icon">📱</span> ANDROID</div>
+      <div class="skill"><span class="skill-icon">💾</span> FORMATAÇÃO</div>
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-icon">⚡</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- CONTATO -->
+    <div class="contact-title">💬 Contato Imediato</div>
+    <a class="wa-btn" href="https://wa.me/5585992844528" target="_blank">
+      <span class="wa-icon">📲</span>
+      (85) 9 9284-4528
+    </a>
+
+    <a class="site-link" id="site-btn" href="https://salvatoresilver.github.io/ykarion-corp/" target="_blank">
+      🌐 &nbsp; VER TODOS OS SERVIÇOS &nbsp; →
+    </a>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-text">
+      TECNOLOGIA DE PONTA &nbsp;•&nbsp; <span>RESULTADOS GARANTIDOS</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
