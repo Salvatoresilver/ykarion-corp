@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ykarion Corp</title>
+  <!-- OG tags for link preview -->
+  <meta property="og:title" content="Ykarion Corp — Suporte Técnico Avançado"/>
+  <meta property="og:description" content="Formatação, upgrade, Android e Menu Scrcpy. Fortaleza e Região Metropolitana."/>
+  <meta property="og:image" content="site/og-image.png"/>
+  <meta property="og:url" content="https://salvatoresilver.github.io/ykarion-corp/"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <link rel="icon" type="image/png" href="site/logo.png"/>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;background:#080808;overflow:hidden}
+    body{
+      display:flex;align-items:center;justify-content:center;
+      flex-direction:column;gap:24px;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(160,0,0,.18) 0%, transparent 70%),
+        #080808;
+    }
+    /* Grid bg */
+    body::before{
+      content:'';position:fixed;inset:0;
+      background-image:linear-gradient(rgba(180,0,0,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(180,0,0,.06) 1px,transparent 1px);
+      background-size:44px 44px;
+      pointer-events:none;
+    }
+    .wrap{position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+    .icon{
+      font-size:52px;
+      animation:pulse 1.4s ease-in-out infinite;
+      filter:drop-shadow(0 0 18px rgba(200,0,0,.7));
+    }
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.08);opacity:1}}
+    .brand{
+      font-family:monospace;font-size:28px;font-weight:700;
+      letter-spacing:.18em;color:#F0EFEA;
+      text-shadow:0 0 30px rgba(200,30,30,.5);
+    }
+    .sub{
+      font-family:monospace;font-size:11px;letter-spacing:.22em;
+      color:rgba(180,60,60,.8);text-transform:uppercase;
+    }
+    .bar-wrap{width:180px;height:2px;background:rgba(100,0,0,.3);border-radius:2px;overflow:hidden}
+    .bar{height:100%;width:0;background:linear-gradient(90deg,#8b0000,#C0392B);border-radius:2px;transition:width .05s linear}
+    .status{font-family:monospace;font-size:10px;letter-spacing:.15em;color:rgba(150,50,50,.7);text-transform:uppercase;min-height:16px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="icon">⚡</div>
+  <div class="brand">YKARION</div>
+  <div class="sub">Suporte Técnico Avançado</div>
+  <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+  <div class="status" id="status">Inicializando...</div>
+</div>
+
+<script>
+// ── TOKEN SYSTEM ─────────────────────────────────────────
+// Secret is split + obfuscated so it's not trivially visible
+var _s = ['59','6b','39','6d','50','5f','32','30','32','35'];
+var SECRET = 'ykarion' + String.fromCharCode(95) + _s.map(function(h){return parseInt(h,16)}).map(String.fromCharCode).join('') + 'xK';
+
+// Time window: changes every 6 hours (more secure than daily)
+var window_size = 6 * 3600 * 1000;
+var time_slot = Math.floor(Date.now() / window_size);
+
+// Generate token using Web Crypto (subtle, async)
+async function genToken(slot) {
+  var enc = new TextEncoder();
+  var key = await crypto.subtle.importKey(
+    'raw', enc.encode(SECRET), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  var sig = await crypto.subtle.sign('HMAC', key, enc.encode('access:' + slot));
+  var arr = Array.from(new Uint8Array(sig));
+  return arr.map(function(b){ return b.toString(16).padStart(2,'0'); }).join('').substring(0, 32);
+}
+
+var bar = document.getElementById('bar');
+var status = document.getElementById('status');
+var progress = 0;
+
+// Animate bar
+var anim = setInterval(function(){
+  progress = Math.min(progress + 2.2, 92);
+  bar.style.width = progress + '%';
+}, 40);
+
+async function go() {
+  try {
+    status.textContent = 'Verificando acesso...';
+    var token = await genToken(time_slot);
+    // Also store previous slot token for edge cases (slot boundary)
+    var tokenPrev = await genToken(time_slot - 1);
+    status.textContent = 'Autenticando...';
+    // Store tokens in sessionStorage
+    sessionStorage.setItem('yk_token', token);
+    sessionStorage.setItem('yk_token_prev', tokenPrev);
+    sessionStorage.setItem('yk_slot', time_slot);
+    sessionStorage.setItem('yk_origin', 'gateway');
+    clearInterval(anim);
+    bar.style.width = '100%';
+    status.textContent = 'Acesso liberado ✓';
+    setTimeout(function(){
+      window.location.href = 'site/index.html';
+    }, 400);
+  } catch(err) {
+    status.textContent = 'Erro: ' + err.message;
+  }
+}
+
+go();
+</script>
+</body>
+</html>
